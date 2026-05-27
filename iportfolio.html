@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JC</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #0f0f0f;
+      --surface:   #1a1a1a;
+      --surface2:  #222222;
+      --border:    #2e2e2e;
+      --teal:      #4ecdc4;
+      --teal-dim:  #3ab8b0;
+      --text:      #e8e8e8;
+      --muted:     #9a9a9a;
+      --tag-bg:    #2a4a48;
+      --serif:     'Georgia', 'Times New Roman', serif;
+      --sans:      'Segoe UI', system-ui, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15,15,15,.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 60px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-logo {
+      width: 36px; height: 36px;
+      background: var(--surface2);
+      border: 1.5px solid var(--teal);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .nav-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+    .nav-brand-text span:first-child { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+    .nav-brand-text span:last-child  { font-size: 13px; color: var(--text); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+      transition: color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    /* ── HERO ── */
+    .hero {
+      padding: 80px 48px;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--tag-bg);
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .hero-headline {
+      font-family: var(--serif);
+      font-size: 52px;
+      line-height: 1.1;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+    .hero-desc {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 460px;
+    }
+    .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--teal);
+      color: #0f0f0f;
+      border: none;
+      padding: 12px 26px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .btn-primary:hover { background: var(--teal-dim); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      padding: 12px 26px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+    /* Hero right column */
+    .hero-cards { display: flex; flex-direction: column; gap: 12px; }
+    .hero-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      transition: border-color .2s;
+    }
+    .hero-item:hover { border-color: var(--teal); }
+    .hero-item-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .hero-item-desc { font-size: 13px; color: var(--muted); }
+    /* ── SECTIONS ── */
+    section { padding: 80px 48px; max-width: 1280px; margin: 0 auto; }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: 40px;
+      font-weight: 700;
+      margin-bottom: 0;
+    }
+    .section-header {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 48px;
+      align-items: start;
+      margin-bottom: 48px;
+    }
+    .section-desc { color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 560px; }
+    /* ── CARDS GRID ── */
+    .cards-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .cards-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+    }
+    .card-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .card-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .card-note { font-size: 13px; color: var(--muted); margin-top: 12px; font-style: italic; }
+    /* ── CV SECTION ── */
+    .cv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .cv-card-wide {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px;
+    }
+    .cv-profil-name {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .cv-profil-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    /* Download CV button row */
+    .cv-download-row {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    ul.bullet-list { list-style: none; padding: 0; margin-top: 16px; }
+    ul.bullet-list li {
+      font-size: 14px;
+      color: var(--teal);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    ul.bullet-list li::before { content: '•'; color: var(--teal); font-size: 18px; }
+    ul.bullet-list li span { color: var(--text); }
+    /* ── VIDEO PLACEHOLDER ── */
+    .video-placeholder {
+      margin-top: 20px;
+      background: var(--surface);
+      border: 1.5px dashed var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      position: relative;
+    }
+    .video-placeholder:hover {
+      border-color: var(--teal);
+      background: rgba(78,205,196,.04);
+    }
+    .video-placeholder input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .video-play-icon {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: rgba(78,205,196,.12);
+      border: 2px solid var(--teal);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .video-play-icon svg { margin-left: 4px; }
+    .video-placeholder-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .video-placeholder-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    /* video element once loaded */
+    .video-placeholder video {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    /* ── PARCOURS ── */
+    .parcours-grid { display: grid; grid-template-columns: 1fr 420px; gap: 32px; }
+    .etapes { display: flex; flex-direction: column; gap: 16px; }
+    .etape-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      transition: border-color .2s;
+    }
+    .etape-card:hover { border-color: var(--teal); }
+    .etape-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+    .etape-title { font-size: 17px; font-weight: 700; color: var(--teal); margin-bottom: 10px; }
+    .etape-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .valeurs-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px;
+    }
+    .valeurs-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .quote-block {
+      border-left: 3px solid var(--teal);
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      background: rgba(78,205,196,.07);
+      border-radius: 0 8px 8px 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .quote-block span { color: var(--teal); }
+    /* ── COMPETENCES ── */
+    .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .comp-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+    }
+    .comp-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .comp-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+    .comp-desc { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      margin: 0 48px;
+    }
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    .footer-left { display: flex; flex-direction: column; gap: 4px; }
+    .footer-left strong { font-size: 15px; }
+    .footer-left span  { font-size: 13px; color: var(--muted); }
+    .footer-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; font-size: 13px; color: var(--muted); }
+    .footer-right a { color: var(--teal); text-decoration: none; }
+    .footer-right a:hover { text-decoration: underline; }
+    /* ── Divider between sections ── */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 48px;
+    }
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .hero, section { padding: 48px 20px; }
+      .hero { grid-template-columns: 1fr; }
+      .section-header { grid-template-columns: 1fr; gap: 16px; }
+      .cards-3, .cards-2, .cv-grid, .parcours-grid, .comp-grid { grid-template-columns: 1fr; }
+      .footer-card { flex-direction: column; gap: 16px; align-items: flex-start; }
+      .footer-right { align-items: flex-start; }
+      .section-divider { margin: 0 20px; }
+      footer { margin: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-brand">
+      <div class="nav-logo">JC</div>
+      <div class="nav-brand-text">
+        <span>ePortfolio</span>
+        <span>Jonathan Carteri</span>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#apropos">À propos</a></li>
+      <li><a href="#cv">CV</a></li>
+      <li><a href="#parcours">Parcours &amp; valeurs</a></li>
+      <li><a href="#competences">Compétences</a></li>
+    </ul>
+    <div class="nav-avatar">JC</div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-card">
+      <span class="tag">Portfolio électronique</span>
+      <h1 class="hero-headline">Éducateur Gradué en herbe</h1>
+      <p class="hero-desc">
+        Bonjour, je m'appelle Jonathan Carteri. J'ai 25 ans et dans cette page tu auras la possibilté d'apprendre à mieux me connaître et de voir quel est mon parcours.
+      </p>
+      <div class="hero-buttons">
+        <a href="#apropos" class="btn-primary">Voir mon profil</a>
+        <a href="#competences" class="btn-secondary">Voir mes compétences</a>
+      </div>
+    </div>
+    <div class="hero-cards">
+      <div class="hero-item">
+        <div class="hero-item-title">01. À propos</div>
+        <div class="hero-item-desc">Qui suit-je? D'où je viens? Où je vais?</div>
+      </div>
+      <div class="hero-item">
+        <div class="hero-item-title">02. Curriculum vitae</div>
+        <div class="hero-item-desc">Mon profil</div>
+      </div>
+      <div class="hero-item">
+        <div class="hero-item-title">03. Valeurs</div>
+        <div class="hero-item-desc">Comment je me définis</div>
+      </div>
+      <div class="hero-item">
+        <div class="hero-item-title">04. Compétences</div>
+        <div class="hero-item-desc">Bloc de compétences et projets associés</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- PARTIE 1 – À PROPOS -->
+  <section id="apropos">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Partie 1</div>
+        <h2 class="section-title">À propos</h2>
+      </div>
+      <p class="section-desc">
+        Je suis étudiant en 3ième années BUT Animation sociale et socioculturelle à l'IUT Bordeaux Montaigne.
+      </p>
+    </div>
+    <div class="cards-3">
+      <div class="card">
+        <div class="card-title">Ma motivation</div>
+        <p class="card-text">
+          Offrir un accompagnement adéquat à tous types de public.
+        </p>
+        <p class="card-note">
+          Possibilté pour tous d'être acteur de leur processus de développement tout au long de la vie.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title">Mon parcours personnel</div>
+        <p class="card-text">
+          Scolarité luxembourgeoise et acquisition d'un diplôme d'état d'éducateur. Depuis ce diplôme, c'est-à-dire 3 ans... je suis devenu bordelais.
+        </p>
+        <p class="card-note"></p>
+      </div>
+      <div class="card">
+        <div class="card-title">Mon projet personnel et professionnel</div>
+        <p class="card-text">
+          Mon projet aujourd'hui est de terminer mon BUT 3 ASSC et devenir un éducateur gradué au Luxembourg.
+        </p>
+        <p class="card-note">Trvailler avec des bénéficiaires sur un projet à long terme</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- PARTIE 2 – CV -->
+  <section id="cv">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Partie 2</div>
+        <h2 class="section-title">Curriculum vitae</h2>
+      </div>
+      <p class="section-desc">
+        Ci-joint, dans mon Curricullum vitae tu peux découvrir mon asiduité et mon investissement lors des différents moments dans mon parcours professionnel.
+      </p>
+    </div>
+
+    <div class="cv-grid">
+      <!-- Profil card -->
+      <div class="cv-card-wide">
+        <div class="card-label">Profil</div>
+        <div class="cv-profil-name">Jonathan Carteri</div>
+        <p class="cv-profil-desc">
+          Bonjour, Moien, Buongiorno, Guten Tag, Bom dia,... Voici un avant goût d'un de mes atouts.
+        </p>
+        <!-- ── DOWNLOAD CV BUTTON ── -->
+        <div class="cv-download-row">
+          <a href="cv-jonathan.pdf" download class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Télécharger mon CV
+          </a>
+        </div>
+      </div>
+
+      <!-- Atouts card -->
+      <div class="cv-card-wide">
+        <div class="card-label">Atouts</div>
+        <div class="cv-profil-name">Ce qui me distingue</div>
+        <ul class="bullet-list">
+          <li><span>Qualité 1 : Je suis polyglotte.</span></li>
+          <li><span>Qualité 2 : J'adore travailler en équipe.</span></li>
+          <li><span>Qualité 3 : J'adore faire et regarder du sport, ainsi que manger.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ── VIDEO PLACEHOLDER ── -->
+    <div class="video-placeholder" id="videoPlaceholder" title="Cliquer pour ajouter une vidéo">
+      <input type="file" accept="video/*" onchange="loadVideo(event)" />
+      <div class="video-play-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--teal)" stroke="none">
+          <polygon points="5,3 19,12 5,21"/>
+        </svg>
+      </div>
+      <div class="video-placeholder-label">Vidéo de présentation</div>
+      <div class="video-placeholder-sub">Cliquez pour ajouter votre vidéo · MP4, MOV, WebM</div>
+    </div>
+
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- PARTIE 3 – PARCOURS & VALEURS -->
+  <section id="parcours">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Partie 3</div>
+        <h2 class="section-title">Mon parcours et mes valeurs</h2>
+      </div>
+      <p class="section-desc">
+        Une valeur que je défends particulièrement est l'équité. Chacun doit pouvoir avoir un accompagnement adéquat à ses besoins et ressources.
+      </p>
+    </div>
+    <div class="parcours-grid">
+      <div class="etapes">
+        <div class="etape-card">
+          <div class="etape-label">Étape 1</div>
+          <div class="etape-title">Le lycée technique pour professions éducatives et sociales</div>
+          <p class="etape-desc">Acquisition de norme et de valeurs qui sont la base du métier d'éducateur.</p>
+        </div>
+        <div class="etape-card">
+          <div class="etape-label">Étape 2</div>
+          <div class="etape-title">Six stages différents</div>
+          <p class="etape-desc">J'ai eu l'opportunité d'accompagner un public différent lors de tous mon parcours.</p>
+        </div>
+        <div class="etape-card">
+          <div class="etape-label">Étape 3</div>
+          <div class="etape-title">La vie à Bordeaux</div>
+          <p class="etape-desc">Découverte de nouvelles valeurs et normes.</p>
+        </div>
+      </div>
+      <div class="valeurs-card">
+        <div class="valeurs-title">Les valeurs que je défends</div>
+        <div class="quote-block">
+          <span>«</span> Un pour tous, tous pour un. <span>»</span>
+        </div>
+        <ul class="bullet-list">
+          <li><span>Valeur 1 : Équité</span></li>
+          <li><span>Valeur 2 : Confiance</span></li>
+          <li><span>Valeur 3 : Respect</span></li>
+          <li><span>Valeur 4 : Tolérance</span></li>
+        </ul>
+        <p class="card-note" style="margin-top:20px;">
+          Ces valeurs résument pour moi, tous types de lien qu'une personne entretien avec quelqu'un. Dans le professionnel, comme dans le privé.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- PARTIE 4 – COMPÉTENCES -->
+  <section id="competences">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Partie 4</div>
+        <h2 class="section-title">Mes compétences</h2>
+      </div>
+      <p class="section-desc">
+        Stimuler les bénéficiaires pour qu'ils soient eux-mêmes vecteur de projet et ainsi acteur de leur développement.
+      </p>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-label">Bloc de compétences</div>
+        <div class="comp-title">Démarche de projet</div>
+        <p class="comp-desc">Création d'un outil pédagogique, applicable sur tous les sites de notre institution.</p>
+        <ul class="bullet-list">
+          <li><span>La communication</span></li>
+          <li><span>L'organisation</span></li>
+          <li><span>La Relation</span></li>
+        </ul>
+      </div>
+      <div class="comp-card">
+        <div class="comp-label">Bloc de compétences</div>
+        <div class="comp-title">Renforcer les capacités individuelles</div>
+        <p class="comp-desc">Favoriser l'autonomie à tous moments. Faire-avec et non faire-pour.</p>
+        <ul class="bullet-list">
+          <li><span>L'observation</span></li>
+          <li><span>Travail en équipe</span></li>
+          <li><span>Prendre du recul</span></li>
+        </ul>
+      </div>
+      <div class="comp-card">
+        <div class="comp-label">Bloc de compétences</div>
+        <div class="comp-title">Construction de dynamique partenariale</div>
+        <p class="comp-desc">Travailler en équipe pluridisciplinaire</p>
+        <ul class="bullet-list">
+          <li><span>La coordination</span></li>
+          <li><span>La complémentarité</span></li>
+          <li><span>L'adaptabilité</span></li>
+        </ul>
+      </div>
+      <div class="comp-card">
+        <div class="comp-label">Bloc de compétences</div>
+        <div class="comp-title">Conception d'interventions adaptées</div>
+        <p class="comp-desc">Prise en compte des ressources, intérêts et besoins de chaque bénéficiaire individuellement.</p>
+        <ul class="bullet-list">
+          <li><span>L'observation</span></li>
+          <li><span>Création de lien</span></li>
+          <li><span>Injection théorique</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-card">
+        <div class="footer-left">
+          <strong>iPortfolio</strong>
+          <span></span>
+        </div>
+        <div class="footer-right">
+          <span>Contact : <a href="mailto:carteriijonathan2901@gmail.com">carteriijonathan2901@gmail.com</a></span>
+          <span>Dernière mise à jour : <strong>mai 2026</strong></span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Video placeholder: load a local video file for preview
+    function loadVideo(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const placeholder = document.getElementById('videoPlaceholder');
+      const url = URL.createObjectURL(file);
+
+      // Remove placeholder content, inject <video>
+      placeholder.innerHTML = '';
+      placeholder.style.border = '1.5px solid var(--teal)';
+      placeholder.style.cursor = 'default';
+
+      const video = document.createElement('video');
+      video.src = url;
+      video.controls = true;
+      video.autoplay = false;
+      video.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;';
+      placeholder.appendChild(video);
+    }
+
+    // Active nav link on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const links    = document.querySelectorAll('.nav-links a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { threshold: 0.4 });
+    sections.forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>
